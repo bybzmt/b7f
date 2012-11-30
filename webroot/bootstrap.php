@@ -1,7 +1,7 @@
 <?php
 
 //定义环境
-defined('ENVIRONMENT') || define('ENVIRONMENT', 'PRODUCT');
+defined('ENVIRONMENT') || define('ENVIRONMENT', 'product');
 
 //调试开关
 defined('DEBUG') || define('DEBUG', false);
