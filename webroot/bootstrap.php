@@ -7,18 +7,26 @@ defined('ENVIRONMENT') || define('ENVIRONMENT', 'PRODUCT');
 defined('DEBUG') || define('DEBUG', false);
 
 //定义基础目录
-defined('BASEPATH') || define('BASEPATH', __DIR__);
+defined('BASE_PATH') || define('BASE_PATH', realpath(__DIR__.'/../'));
 
-//类库
-set_include_path(__DIR__.'/../lib');
+//配制文件目录
+defined('CONFIG_PATH') || define('CONFIG_PATH', BASE_PATH.'/config');
 
 //视图目录
-defined('VIEWPATH') || define('VIEWPATH', BASEPATH.'/views');
+defined('VIEW_PATH') || define('VIEW_PATH', BASE_PATH.'/views');
+
+//数据目录
+defined('VAR_PATH') || define('VAR_PATH', BASE_PATH.'/var');
+
+//第3方库目录
+defined('VENDOR_PATH') || define('VENDOR_PATH', BASE_PATH.'/vendors');
 
 //require 'by/loader.php';
-
 //$loader = new \By\Loader();
 //$loader->autoload(true);
+
+//类库
+set_include_path(BASE_PATH.'/src');
 
 //启用默认自动载入
 spl_autoload_register();

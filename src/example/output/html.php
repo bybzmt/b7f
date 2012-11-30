@@ -15,7 +15,7 @@ class Html implements By\Output
 
 	function reader($view)
 	{
-		require VIEWPATH . "/{$view}.phtml";
+		require VIEW_PATH . "/{$view}.phtml";
 	}
 
 	function onSuccess(By\Input $input, array $actions)

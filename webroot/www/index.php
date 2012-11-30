@@ -3,7 +3,7 @@ namespace Example;
 
 use By;
 
-require '../bootstrap.php';
+require __DIR__ .'/../bootstrap.php';
 
 $input = new By\Input\Http(
 	INPUT_GET, array(
