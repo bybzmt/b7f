@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title><?=$title?></title>
+<?
+//这里是头部css
+foreach ($css as $src) {
+	echo "<link type='text/css' src='{$src}' />\n";
+}
+
+?>
+</head>
+<body>
+	<div id='top'><?=$top;?></div>
+	
+	<div>
+		<div id='left'><?=$left?></div>
+		<div id='content'><?=$content?></div>
+	</div>
+
+	<div id='footer'>
+<?//尾部js
+foreach ($js as $src) {
+	echo "<script src='{$src}'></script>\n";
+}
+if (isset($js_txt)) {
+	echo $js_txt;
+}
+?>
+
+	</div>
+</body>
+</html>
