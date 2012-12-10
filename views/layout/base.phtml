@@ -1,32 +1,35 @@
-<html>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="zh-CN">
 <head>
-	<title><?=$title?></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<title><?=htmlspecialchars($title)?></title>
 <?
 //这里是头部css
-foreach ($css as $src) {
-	echo "<link type='text/css' src='{$src}' />\n";
+if (isset($css_files)) {
+	foreach ($css_files as $src) {
+		echo "<link rel='stylesheet' href='{$src}' type='text/css' />\n";
+	}
+}
+
+if (isset($head_txt)) {
+	echo $head_txt;
 }
 
 ?>
 </head>
 <body>
-	<div id='top'><?=$top;?></div>
-	
-	<div>
-		<div id='left'><?=$left?></div>
-		<div id='content'><?=$content?></div>
-	</div>
+	<?=$content?>
 
-	<div id='footer'>
 <?//尾部js
-foreach ($js as $src) {
-	echo "<script src='{$src}'></script>\n";
+if (isset($js_files)) {
+	foreach ($js_files as $src) {
+		echo "<script src='{$src}'></script>\n";
+	}
 }
-if (isset($js_txt)) {
-	echo $js_txt;
+if (isset($footer_txt)) {
+	echo $footer_txt;
 }
 ?>
 
-	</div>
 </body>
 </html>

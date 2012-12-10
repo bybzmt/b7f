@@ -1,13 +1,13 @@
-<!DOCTYPE html>
-	<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="zh-CN">
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>test &rsaquo; 登录</title>
-	<link rel='stylesheet' id='wp-admin-css'  href='http://localhost/wordpress/wp-admin/css/wp-admin.css?ver=3.4.2' type='text/css' media='all' />
-<link rel='stylesheet' id='colors-fresh-css'  href='http://localhost/wordpress/wp-admin/css/colors-fresh.css?ver=3.4.2' type='text/css' media='all' />
-<meta name='robots' content='noindex,nofollow' />
-	</head>
-	<body class="login">
+<?php
+$this->_setLayout('layout/base', 'content');
+
+$this->_layout->title = 'test > 登陆';
+
+$this->_layout->css_files[] = 'http://localhost/wordpress/wp-admin/css/wp-admin.css?ver=3.4.2';
+$this->_layout->css_files[] = 'http://localhost/wordpress/wp-admin/css/colors-fresh.css?ver=3.4.2';
+
+$this->_layout->head_txt .= "<meta name='robots' content='noindex,nofollow' />";
+?>
 	<div id="login">
 		<h1><a href="http://cn.wordpress.org/" title="基于 WordPress">test</a></h1>
 	<p class="message">	您已登出。<br />
@@ -53,6 +53,3 @@ if(typeof wpOnload=='function')wpOnload();
 
 	
 		<div class="clear"></div>
-	</body>
-	</html>
-	

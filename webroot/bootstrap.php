@@ -14,6 +14,7 @@ defined('CONFIG_PATH') || define('CONFIG_PATH', BASE_PATH.'/config');
 
 //视图目录
 defined('VIEW_PATH') || define('VIEW_PATH', BASE_PATH.'/views');
+defined('VIEW_EXT') || define('VIEW_EXT', '.phtml');
 
 //数据目录
 defined('VAR_PATH') || define('VAR_PATH', BASE_PATH.'/var');

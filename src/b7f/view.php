@@ -4,9 +4,24 @@ namespace b7f;
 
 class View
 {
-	protected $_vars;
+	/*
+	 * 注册的变量
+	 */
+	protected $_vars = array();
+
+	/*
+	 * 视图文件
+	 */
 	protected $_file;
+
+	/*
+	 * 布局文件
+	 */
 	protected $_layout;
+
+	/*
+	 * 当前模板输出注册到布局的变量名
+	 */
 	protected $_layout_var;
 
 	public function __construct($view=null)
@@ -22,10 +37,15 @@ class View
 		$this->_vars[$key] = $val;
 	}
 
+	public function &__get($key)
+	{
+		return $this->_vars[$key];
+	}
+
 	/**
 	 * 批量注册变量
 	 */
-	public function assgns(array $vars)
+	public function assigns(array $vars)
 	{
 		$this->_vars = array_merge($this->_vars, $vars);
 	}
@@ -37,20 +57,34 @@ class View
 	{
 		$this->_setFile($view);
 
-		if ($this->_layout) {
-			//在有布局时将自身的渲染结果作为布局的一个变量传达
-			$this->_layout->{$this->_layout_var} = $this->_reader();
-			return $this->_layout->reader();
+		$out = $this->_reader();
+
+		if (!$this->_layout) {
+			return $out;
 		}
-		else {
-			return $this->_reader();
-		}
+
+		//在有布局时将自身的渲染结果作为布局的一个变量传达
+		$this->_layout->{$this->_layout_var} = $out;
+		return $this->_layout->reader();
 	}
 
-	protected function _setLayout($layout, $var)
+	/**
+	 * 设置布局 (外部调用)
+	 */
+	public function setLayout($layout, $var)
 	{
 		$this->_layout = new self($layout);
 		$this->_layout_var = $var;
+	}
+
+	/**
+	 * 设置布局 (内部调用)
+	 */
+	protected function _setLayout($layout, $var)
+	{
+		if (!$this->_layout) {
+			$this->setLayout($layout, $var);
+		}
 	}
 
 	protected function _setFile($view)
