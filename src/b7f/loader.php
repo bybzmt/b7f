@@ -13,6 +13,13 @@ class Loader
 	 * array(
 	 *     namespace1 => path1
 	 *     namespace2 => path2
+	 *     namespace3 => array(
+	 *        'path3',
+	 *        'names3-1' => array(
+	 *            'path-3-1',
+	 *            'names3-1-1 => 'path3-1-1'
+	 *            )
+	 *         )
 	 *     ...
 	 * )
 	 */
@@ -52,6 +59,43 @@ class Loader
 		}
 
 		return strtolower(str_replace($this->search, $this->replace, $classname)) . '.php';
+	}
+
+	public function locate2($classname)
+	{
+		$tmp = & $this->namespace;
+
+		$cls = explode('\\', strtolower($classname));
+		$find = false;
+
+		while ($key = array_shift($cls)) {
+			if (!isset($tmp[$key])) {
+				break;
+			}
+
+			$find = true;
+
+			$tmp = & $tmp[$key];
+
+			if (!is_array($tmp)) {
+				break;
+			}
+		}
+
+		if (!$find) {
+			return null;
+		}
+
+		if (is_array($tmp)) {
+			$path = $tmp[0];
+		}
+		else {
+			$path = $tmp;
+		}
+
+		$path .= implode(DIRECTORY_SEPARATOR, $cls) . '.php';
+
+		return $path;
 	}
 
 	/**
