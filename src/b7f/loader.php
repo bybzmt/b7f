@@ -4,11 +4,6 @@ namespace By;
 class Loader
 {
 	/**
-	 * 静态加载类
-	 */
-	public $static;
-
-	/**
 	 * 命名空间
 	 * array(
 	 *     namespace1 => path1
@@ -31,9 +26,9 @@ class Loader
 	public $search = array('\\');
 	public $replace = array(DIRECTORY_SEPARATOR);
 
-	public function __construct()
+	public function __construct($namespace)
 	{
-		$this->namespace['By'] = __DIR__;
+		$this->namespace = $namespace;
 	}
 
 	/**
@@ -44,58 +39,38 @@ class Loader
 	 */
 	public function locate($classname)
 	{
-		if (isset($this->static[$classname])) {
-			return $this->static[$classname];
-		}
+		$classname = strtolower($classname);
 
 		foreach ($this->namespace as $namespace => $path) {
 			if (strpos($classname, $namespace) === 0) {
-				return strtolower($path . str_replace(
-					$this->search,
-					$this->replace,
+				return $path . str_replace(
+					'\\',
+					DIRECTORY_SEPARATOR,
 					substr($classname, strlen($namespace))
-				)) . '.php';
+				) . '.php';
 			}
 		}
 
-		return strtolower(str_replace($this->search, $this->replace, $classname)) . '.php';
+		return null;
 	}
 
-	public function locate2($classname)
+	public function locate3($classname)
 	{
-		$tmp = & $this->namespace;
+		$space = strtolower($classname);
+		$class = '';
 
-		$cls = explode('\\', strtolower($classname));
-		$find = false;
+		$tmp = explode('\\', $space);
 
-		while ($key = array_shift($cls)) {
-			if (!isset($tmp[$key])) {
-				break;
+		while ($tmp) {
+			if (isset($this->namespace[$space])) {
+				return $this->namespace[$space] . $class . '.php'; 
 			}
 
-			$find = true;
-
-			$tmp = & $tmp[$key];
-
-			if (!is_array($tmp)) {
-				break;
-			}
+			$class .= DIRECTORY_SEPARATOR . array_pop($tmp);
+			$space = implode('\\', $tmp);
 		}
 
-		if (!$find) {
-			return null;
-		}
-
-		if (is_array($tmp)) {
-			$path = $tmp[0];
-		}
-		else {
-			$path = $tmp;
-		}
-
-		$path .= implode(DIRECTORY_SEPARATOR, $cls) . '.php';
-
-		return $path;
+		return null;
 	}
 
 	/**
