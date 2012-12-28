@@ -22,14 +22,30 @@ defined('VAR_PATH') || define('VAR_PATH', BASE_PATH.'/var');
 //第3方库目录
 defined('VENDOR_PATH') || define('VENDOR_PATH', BASE_PATH.'/vendors');
 
-//require 'by/loader.php';
-//$loader = new \By\Loader();
-//$loader->autoload(true);
+/*自动载入1
+spl_autoload_register(function($classname) {
+	
+	// 命名空间
+	static $namespace = array();
 
-//类库
+	$space = strtolower($classname);
+	$class = '';
+
+	$tmp = explode('\\', $space);
+
+	while ($tmp) {
+		if (isset($namespace[$space])) {
+			require $namespace[$space] . $class . '.php'; 
+		}
+
+		$class .= DIRECTORY_SEPARATOR . array_pop($tmp);
+		$space = implode('\\', $tmp);
+	}
+});
+*/
+
+//自动载入2
 set_include_path(BASE_PATH.'/src');
-
-//启用默认自动载入
 spl_autoload_register();
 
 //错误处理
