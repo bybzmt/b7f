@@ -1,2 +1,21 @@
+<?php
+$this->_setLayout('layout/base', 'content');
 
-Hellow, word
+$this->_layout->title = '首页';
+
+
+widget\user::top();
+?>
+
+
+<div>
+这里是index<br />
+<?php
+foreach ($rows as $row) {
+	echo "<div>";
+	echo "<h2>".htmlspecialchars($row['title'])."</h2>";
+	echo "<p>".htmlspecialchars($row['content'])."</p>";
+	echo "</div>";
+}
+?>
+</div>

@@ -3,6 +3,13 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title><?=htmlspecialchars($title)?></title>
+
+<style>
+div{
+	border:1px solid #ccc;
+	margin:10px;
+}
+</style>
 <?
 //这里是头部css
 if (isset($css_files)) {
@@ -18,7 +25,14 @@ if (isset($head_txt)) {
 ?>
 </head>
 <body>
+<div>
+这里是layout</br>
 	<?=$content?>
+
+<div>
+footer
+</div>
+</div>
 
 <?//尾部js
 if (isset($js_files)) {

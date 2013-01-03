@@ -22,37 +22,27 @@ defined('VAR_PATH') || define('VAR_PATH', BASE_PATH.'/var');
 //第3方库目录
 defined('VENDOR_PATH') || define('VENDOR_PATH', BASE_PATH.'/vendors');
 
+#-------------------
+# 应用常量
+# ------------------
+//分页每页长度
+define('PAGE_SIZE', 20);
+
+require __DIR__ . '/common.php';
+
 /*自动载入1
-spl_autoload_register(function($classname) {
-	
-	// 命名空间
-	static $namespace = array();
-
-	$space = strtolower($classname);
-	$class = '';
-
-	$tmp = explode('\\', $space);
-
-	while ($tmp) {
-		if (isset($namespace[$space])) {
-			require $namespace[$space] . $class . '.php'; 
-		}
-
-		$class .= DIRECTORY_SEPARATOR . array_pop($tmp);
-		$space = implode('\\', $tmp);
-	}
-});
+spl_autoload_register('_namespace_autoload');
 */
 
 //自动载入2
 set_include_path(BASE_PATH.'/src');
 spl_autoload_register();
 
-//错误处理
-set_error_handler(function($errno, $errstr, $errfile, $errline){
-    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-});
-
 if (DEBUG) {
 	error_reporting(E_ALL);
 }
+
+//错误处理
+set_error_handler('_ErrorException', error_reporting());
+
+session_start();

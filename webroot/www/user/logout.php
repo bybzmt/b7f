@@ -1,4 +1,7 @@
 <?php
 
-require __DIR__.'/../bootstrap.php';
+require __DIR__.'/../../bootstrap.php';
+
+$controller = new controller\user();
+$controller->logoutAction();
 

@@ -1,7 +1,7 @@
 <?php
 
-require __DIR__.'/../bootstrap.php';
+require __DIR__.'/../../bootstrap.php';
 
-$controller = new user\contrller\index();
+$controller = new controller\user();
 $controller->loginAction();
 

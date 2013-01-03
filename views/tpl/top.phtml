@@ -1,0 +1,10 @@
+<div>
+这里是widget<br />
+
+<?if($login):?>
+用户:<?=htmlspecialchars($user)?> <a href="<?=$url_logout?>">登出</a>
+<?else:?>
+<a href="<?=$url?>">请登陆</a>
+<?endif;?>
+
+</div>
