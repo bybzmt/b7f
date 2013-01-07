@@ -8,37 +8,66 @@ use \redis;
  */
 class cache
 {
+	//redis连接
 	protected $_redis;
+
+	//缓存前缓
+	protected $_prefix = 'db_';
+
+	//数据更改队列
+	protected $_queue = 'db_chang_queue';
 
 	public function __construct(redis $redis)
 	{
 		$this->_redis = $redis;
 	}
 
-	public function add(row $row)
+	/**
+	 * 保存数据
+	 *
+	 * @param row  $row   数据
+	 * @param bool $chang 数据是否己改变
+	 */
+	public function keep(row $row, $chang=false)
 	{
-		$this->_redis->set($row->getId(), serialize($row));
+		$id = $row->getId();
 
-		$this->_redis->rpush('watcher_add', $row->getId());
-	}
+		//10小时后过期 (过期时间在10分钟内抖动,防止出现缓存集休失效)
+		$this->_redis->setex("{$this->_prefix}{$id}", 36000+mt_rand(0, 600), serialize($row));
 
-	public function edit(row $row)
-	{
-		$this->_redis->set($row->getId(), serialize($row));
+		if ($chang) {
+			$this->_redis->rpush($this->_queue, "{$this->_prefix}{$id}");
+		}
 
-		$this->_redis->rpush('watcher_edit', $row->getId());
+		$row->_keep |= row::KEEP_CACHED;
 	}
 
 	/**
+	 * 标记对像不存在, 防止缓存击穿攻击
+	 */
+	public function makeNotExists($id)
+	{
+		//随机5到10分钟的缓存,防止出现缓存集休失效
+		$this->_redis->setex("{$this->_prefix}{$id}", mt_rand(300, 600), serialize(false));
+	}
+	
+	/**
 	 * 从cache中取出对像
+	 *
+	 * @return null  未从缓存中找到
+	 *         false 从缓存中确定该对像不存在
 	 */
 	public function get($id)
 	{
-		$obj = $this->_redis->get($id);
+		$obj = $this->_redis->get("{$this->_prefix}{$id}");
 
 		if ($obj) {
 			$obj = unserialize($obj);
-			$obj->_cached = true;
+
+			if ($obj) {
+				$obj->_keep |= row::KEEP_CACHED;
+			}
+
 			return $obj;
 		}
 
@@ -50,12 +79,21 @@ class cache
 	 */
 	public function del(row $row)
 	{
-		if ($row->_saved) {
-			$this->_redis->set($row->getId(), serialize($row));
-			$this->_redis->rpush('watcher_del', $row->getId());
+		$this->_redis->del($row->getId());
+		$row->_keep &= ~row::KEEP_CACHED;
+	}
+
+	/**
+	 * 从队列中弹出一个需要进行的操作
+	 */
+	public function pop()
+	{
+		$id = $this->_redis->lpop($this->_queue);
+
+		if (!$id) {
+			return null;
 		}
-		else {
-			$this->_redis->del($row->getId());
-		}
+
+		return $this->get($id);
 	}
 }

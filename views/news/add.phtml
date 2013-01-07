@@ -1,0 +1,16 @@
+<?php
+$this->_setLayout('layout/base', 'content');
+
+$this->_layout->title = '添加新闻';
+
+
+widget\user::top();
+?>
+
+
+<div>
+<form action="<?=$posturl?>" method="post">
+标题: <input type='text' name='title' /> <br />
+内容: <textarea name='content'></textarea>
+</form>
+</div>

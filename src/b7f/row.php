@@ -37,4 +37,34 @@ abstract class row
 	 * 得映射器
 	 */
 	abstract public function getMapper();
+
+	/**
+	 * 得到观察者
+	 */
+	abstract public function getWatcher();
+
+	/**
+	 * 保存
+	 */
+	public function save()
+	{
+		if ($this->_keep & self::KEEP_SAVED) {
+			$this->_state = self::STATE_EDIT;
+		}
+		else {
+			$this->_state = self::STATE_ADD;
+		}
+
+		if (!($this->_keep & self::KEEP_PHP)) {
+			$this->getWatcher()->keep($this);
+		}
+	}
+
+	/**
+	 * 删除
+	 */
+	public function del()
+	{
+		$this->_state = self::STATE_DEL;
+	}
 }

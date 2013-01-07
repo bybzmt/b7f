@@ -45,8 +45,9 @@ function _namespace_autoload($classname)
 	static $namespace;
 
 	if (!$namespace) {
-		$config = get_config();
-		$namespace = $config['autoload'];
+		//命名空间映射
+		$namespace = array(
+		);
 	}
 
 	$space = strtolower($classname);

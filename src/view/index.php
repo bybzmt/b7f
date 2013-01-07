@@ -19,6 +19,7 @@ class index
 
 		$view = new b7f\view();
 		$view->rows = $rows;
+		$view->url_add = url('news/add');
 
 		echo $view->reader('index');
 	}

@@ -6,7 +6,7 @@ namespace b7f;
  */
 class watcher
 {
-	protected $_rows = array();
+	public $_rows = array();
 
 	protected $_cache;
 
@@ -15,20 +15,55 @@ class watcher
 		$this->_cache = $cache;
 	}
 
+	/**
+	 * 得到一个对像
+	 *
+	 * @return null  未从缓存中找到
+	 *         false 从缓存中确定该对像不存在
+	 */
 	public function get($id)
 	{
 		if (isset($this->_rows[$id])) {
-			return $this->_rows[$id];
+			return $this->row[$id];
 		}
 
-		return $this->_cache->get($id);
+		$row = $this->_cache->get($id);
+
+		if ($row) {
+			$this->_rows[$id] = $row;
+
+			//当前行己被删除
+			if ($row->_state == row::STATE_DEL) {
+				return false;
+			}
+		}
+
+		return $row;
 	}
 
-	public function keep(row $row)
+	/**
+	 * 保持对像
+	 *
+	 * @param row  $row   要存的对象
+	 * @param bool $saved 是否标记为己存储
+	 */
+	public function keep(row $row, $saved=false)
 	{
-		$row->_keep = $row->_keep | row::KEEP_PHP;
+		$row->_keep |= row::KEEP_PHP;
+
+		if ($saved) {
+			$row->_keep |= row::KEEP_SAVED;
+		}
 
 		$this->_rows[$row->getId()] = $row;
+	}
+
+	/**
+	 * 标记对像不存在, 防止缓存击穿攻击
+	 */
+	public function makeNotExists($id)
+	{
+		$this->_cache->makeNotExists($id);
 	}
 
 	/**
@@ -38,21 +73,17 @@ class watcher
 	{
 		$cache = $this->_cache;
 
-		foreach ($this->_rows as $row) {
-			switch ($row->_state) {
-			case row::STATE_ADD :
-				$cache->add($row);
-				break;
-
-			case row::STATE_EDIT :
-				$cache->edit($row);
-				break;
-
-			case row::STATE_DEL :
-				if ($row->_cached) {
+		foreach ($this->_rows as $key => $row) {
+			if ($row->_state) {
+				if (row::STATE_DEL && !($row->_keep & row::KEEP_SAVED)) {
 					$cache->del($row);
 				}
-				break;
+				else {
+					$cache->keep($row, true);
+				}
+			}
+			else if (!($row->_keep & row::KEEP_CACHED)){
+				$cache->keep($row);
 			}
 		}
 	}

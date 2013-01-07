@@ -1,44 +1,28 @@
 <?php
 namespace b7f;
 
+/**
+ * 数据映射器抽像类
+ */
 abstract class mapper
 {
-	abstract public function getWatcher();
-	abstract public function getMapperName();
+	/**
+	 * 向数据库添加一条记录
+	 */
+	abstract public function insert($row);
+
+	/**
+	 * 向数据库修改一条记录
+	 */
+	abstract public function update($row);
+
+	/**
+	 * 向数据库删除一条记录
+	 */
+	abstract public function delete($row);
+
+	/**
+	 * 将数组映射成对像
+	 */
 	abstract public function doMap(array $row);
-
-	public function save(row $obj)
-	{
-		if ($obj->_keep & row::KEEP_SAVED) {
-			$obj->_state = row::STATE_EDIT;
-		}
-		else {
-			$obj->_state = row::STATE_ADD;
-		}
-
-		if (!($obj->_keep & row::KEEP_PHP)) {
-			$this->getWatcher()->keep($obj);
-		}
-	}
-
-	public function del(row $obj)
-	{
-		$obj->_state = row::STATE_DEL;
-	}
-
-
-	protected function _doMap(array $row)
-	{
-		$obj = $this->doMap($row);
-		$obj->_keep |= row::KEEP_SAVED;
-
-		$this->getWatcher()->keep($obj);
-
-		return $obj;
-	}
-
-	protected function _find($id)
-	{
-		return $this->getWatcher()->get($id);
-	}
 }
