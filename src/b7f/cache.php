@@ -88,12 +88,18 @@ class cache
 	 */
 	public function pop()
 	{
-		$id = $this->_redis->lpop($this->_queue);
+		while (true) {
+			$id = $this->_redis->lpop($this->_queue);
 
-		if (!$id) {
-			return null;
+			if (!$id) {
+				return null;
+			}
+
+			$row = $this->get($id);
+
+			if ($row) {
+				return $row;
+			}
 		}
-
-		return $this->get($id);
 	}
 }
