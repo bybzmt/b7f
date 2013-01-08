@@ -14,7 +14,7 @@ class user extends b7f\mapper
 
 	private function __construct(){}
 
-	public function getInstance()
+	static public function getInstance()
 	{
 		if (!self::$instance) {
 			self::$instance = new self();
