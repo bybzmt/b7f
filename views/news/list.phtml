@@ -1,0 +1,16 @@
+<?php
+$this->_setLayout('layout/base', 'content');
+
+$this->_layout->title = '添加新闻';
+
+
+widget\user::top();
+?>
+
+
+<div>
+<?foreach ($rows as $row) :?>
+<h3><?=$row['title']?></h3>
+<div><?=$row['content']?></div>
+<?endforeach;?>
+</div>
