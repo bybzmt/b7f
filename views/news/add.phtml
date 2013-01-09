@@ -9,8 +9,14 @@ widget\user::top();
 
 
 <div>
+<?if($msg):?>
+<h2><?=$msg?></h2>
+<?endif?>
+
 <form action="<?=$posturl?>" method="post">
+<input type="hidden" name="token" value="<?=$token?>" />
 标题: <input type='text' name='title' /> <br />
 内容: <textarea name='content'></textarea>
+<button type="sumbit">提交</button>
 </form>
 </div>

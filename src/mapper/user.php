@@ -168,6 +168,8 @@ class user extends b7f\mapper
 		}
 
 		$redis->set('tbid_user', $id);
+
+		return $id;
 	}
 
 }
