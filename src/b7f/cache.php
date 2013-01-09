@@ -28,15 +28,20 @@ class cache
 	 * @param row  $row   数据
 	 * @param bool $chang 数据是否己改变
 	 */
-	public function keep(row $row, $chang=false)
+	public function keep(row $row)
 	{
+		$chang = $row->_keep & row::KEEP_CHANGE;
+
 		$id = $row->getId();
+
+		//去己变动标记
+		$row->_keep &= ~row::KEEP_CHANGE;
 
 		//10小时后过期 (过期时间在10分钟内抖动,防止出现缓存集休失效)
 		$this->_redis->setex("{$this->_prefix}{$id}", 36000+mt_rand(0, 600), serialize($row));
 
 		if ($chang) {
-			$this->_redis->rpush($this->_queue, "{$this->_prefix}{$id}");
+			$this->_redis->rpush($this->_queue, $id);
 		}
 
 		$row->_keep |= row::KEEP_CACHED;

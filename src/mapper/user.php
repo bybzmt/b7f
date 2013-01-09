@@ -91,17 +91,28 @@ class user extends b7f\mapper
 	/**
 	 * 添加
 	 */
-	public function insert($row)
+	public function inserts(array $rows)
 	{
-		$data = array(
-			'id' => $row->id,
-			'user' => $row->user,
-			'pass' => $row->pass,
-			'access' => $row->access,
+		$feilds = array(
+			'id',
+			'user',
+			'pass',
+			'access',
 		);
 
+		$data = array();
+
+		foreach ($rows as $row) {
+			$data[] = array(
+				'id' => $row->id,
+				'user' => $row->user,
+				'pass' => $row->pass,
+				'access' => $row->access,
+			);
+		}
+
 		$db = get_db();
-		$db->insert('user', $data);
+		$db->inserts('user', $feilds, $data);
 	}
 
 	/**
@@ -122,10 +133,16 @@ class user extends b7f\mapper
 	/**
 	 * 删除
 	 */
-	public function delete($row)
+	public function deletes(array $row)
 	{
+		$ids = array();
+
+		foreach ($rows as $row) {
+			$ids[] = $row->id;
+		}
+
 		$db = get_db();
-		$db->delete('user', "id={$row->id}");
+		$db->delete('user', array('id'=>$ids));
 	}
 
 	/**

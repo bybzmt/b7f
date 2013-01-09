@@ -105,19 +105,32 @@ class news extends b7f\mapper
 	/**
 	 * 添加
 	 */
-	public function insert($row)
+	public function inserts(array $rows)
 	{
-		$data = array(
-			'id' => $row->id,
-			'uid' => $row->uid,
-			'type' => $row->type,
-			'title' => $row->title,
-			'content' => $row->content,
-			'addtime' => $row->addtime,
+		$feilds = array(
+			'id',
+			'uid',
+			'type',
+			'title',
+			'content',
+			'addtime',
 		);
 
+		$data = array();
+
+		foreach ($rows as $row) {
+			$data[] = array(
+				$row->id,
+				$row->uid,
+				$row->type,
+				$row->title,
+				$row->content,
+				$row->addtime,
+			);
+		}
+
 		$db = get_db();
-		$db->insert('news', $data);
+		$db->inserts('news', $feilds, $data);
 	}
 
 	/**
@@ -139,10 +152,16 @@ class news extends b7f\mapper
 	/**
 	 * 删除
 	 */
-	public function delete($row)
+	public function deletes(array $rows)
 	{
+		$ids = array();
+
+		foreach ($rows as $row) {
+			$ids[] = $row->id;
+		}
+
 		$db = get_db();
-		$db->delete('news', "id={$row->id}");
+		$db->delete('news', array('id'=>$ids));
 	}
 
 	/**

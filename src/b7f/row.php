@@ -19,6 +19,11 @@ abstract class row
 	const KEEP_PHP    = 4;
 
 	/**
+	 * 缓存数据己变动
+	 */
+	const KEEP_CHANGE = 8;
+
+	/**
 	 * 是否存储在cache中
 	 */
 	public $_keep;
@@ -54,6 +59,8 @@ abstract class row
 		else {
 			$this->_state = self::STATE_ADD;
 		}
+
+		$this->_keep |= self::KEEP_CHANGE;
 
 		if (!($this->_keep & self::KEEP_PHP)) {
 			$this->getWatcher()->keep($this);

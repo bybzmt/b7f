@@ -75,11 +75,11 @@ class watcher
 
 		foreach ($this->_rows as $key => $row) {
 			if ($row->_state) {
-				if (row::STATE_DEL && !($row->_keep & row::KEEP_SAVED)) {
+				if ($row->_state == row::STATE_DEL && !($row->_keep & row::KEEP_SAVED)) {
 					$cache->del($row);
 				}
 				else {
-					$cache->keep($row, true);
+					$cache->keep($row);
 				}
 			}
 			else if (!($row->_keep & row::KEEP_CACHED)){
