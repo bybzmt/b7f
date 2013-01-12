@@ -7,9 +7,9 @@ namespace b7f;
 abstract class mapper
 {
 	/**
-	 * 向数据库添加一条记录
+	 * 向数据库添加一批记录
 	 */
-	abstract public function insert($row);
+	abstract public function inserts(array $row);
 
 	/**
 	 * 向数据库修改一条记录
@@ -17,9 +17,9 @@ abstract class mapper
 	abstract public function update($row);
 
 	/**
-	 * 向数据库删除一条记录
+	 * 向数据库删除一批记录
 	 */
-	abstract public function delete($row);
+	abstract public function deletes(array $row);
 
 	/**
 	 * 将数组映射成对像
