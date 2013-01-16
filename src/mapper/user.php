@@ -184,7 +184,7 @@ class user extends b7f\mapper
 			$id = 1;
 		}
 
-		$redis->set('tbid_user', $id);
+		$redis->setex('tbid_user', 3600, $id);
 
 		return $id;
 	}

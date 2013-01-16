@@ -65,8 +65,7 @@ class news extends b7f\mapper
 		$db = get_db();
 
 		$sql = "SELECT id FROM news LIMIT {$offset},{$length}";
-		$stmt = $db->prepare($sql);
-		$stmt->execute(array($user));
+		$stmt = $db->query($sql);
 
 		$rows = $ids = array();
 
@@ -169,7 +168,7 @@ class news extends b7f\mapper
 	 */
 	public function doMap(array $row)
 	{
-		$obj = new domain\user();
+		$obj = new domain\news();
 		$obj->id = $row['id'];
 		$obj->uid = $row['uid'];
 		$obj->type = $row['type'];
@@ -205,13 +204,17 @@ class news extends b7f\mapper
 			$id = 1;
 		}
 
-		$redis->set('tbid_news', $id);
+		$redis->setex('tbid_news', 3600, $id);
 
 		return $id;
 	}
 
 	private function _getRows($ids)
 	{
+		if (!$ids) {
+			return array();
+		}
+
 		$db = get_db();
 
 		$sql = "SELECT id,type,uid,title,content,addtime FROM news WHERE id IN(".implode(',', $ids).")";

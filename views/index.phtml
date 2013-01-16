@@ -17,6 +17,7 @@ widget\user::top();
 foreach ($rows as $row) {
 	echo "<div>";
 	echo "<h2>".htmlspecialchars($row['title'])."</h2>";
+	echo "<a href='".$row['edit_url']."'>编辑</a>";
 	echo "<p>".htmlspecialchars($row['content'])."</p>";
 	echo "</div>";
 }

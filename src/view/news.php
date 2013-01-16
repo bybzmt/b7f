@@ -34,6 +34,30 @@ class news
 
 		echo $view->reader('news/read');
 	}
+	
+	public function edit($id, $token, $msg)
+	{
+		$mapper = mapper\news::getInstance();
+
+		$row = $mapper->find($id);
+
+		if (!$row) {
+			header("HTTP/1.0 404 Not Found");
+			return;
+		}
+
+		$view = new b7f\view();
+		$view->id = $row->id;
+		$view->type = $row->type;
+		$view->title = $row->title;
+		$view->content = $row->content;
+
+		$view->token = $token;
+		$view->msg = $msg;
+		$view->posturl = url('news/doedit');
+
+		echo $view->reader('news/edit');
+	}
 
 	public function showlist($page)
 	{
@@ -44,13 +68,8 @@ class news
 
 		$rows = $mapper->findByRange($offset, $length);
 
-		$arr = array();
-		foreach ($rows as $row) {
-			$arr[] = (array)$row;
-		}
-
 		$view = new b7f\view();
-		$view->rows = $arr;
+		$view->rows = $rows;
 		echo $view->reader('news/list');
 	}
 }

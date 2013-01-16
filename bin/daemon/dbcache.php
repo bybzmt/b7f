@@ -32,6 +32,7 @@ while ($row = $cache->pop()) {
 		$row->getMapper()->update($row);
 
 		$row->_state = null;
+		$row->_keep &= ~b7f\row::KEEP_QUEUE;
 
 		$cache->keep($row);
 		break;
@@ -78,6 +79,7 @@ function do_inserts($mapper, $rows)
 		echo 'add: '.$row->getId(),"\n";
 
 		$row->_keep |= b7f\row::KEEP_SAVED;
+		$row->_keep &= ~b7f\row::KEEP_QUEUE;
 		$row->_state = null;
 
 		$cache->keep($row);

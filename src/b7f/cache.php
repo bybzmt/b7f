@@ -31,20 +31,27 @@ class cache
 	public function keep(row $row)
 	{
 		$chang = $row->_keep & row::KEEP_CHANGE;
+		$queue = $row->_keep & row::KEEP_QUEUE;
 
 		$id = $row->getId();
 
 		//去己变动标记
 		$row->_keep &= ~row::KEEP_CHANGE;
 
+		//标记为以缓存
+		$row->_keep |= row::KEEP_CACHED;
+
+		if ($chang) {
+			//标记为以队列
+			$row->_keep |= row::KEEP_QUEUE;
+		}
+
 		//10小时后过期 (过期时间在10分钟内抖动,防止出现缓存集休失效)
 		$this->_redis->setex("{$this->_prefix}{$id}", 36000+mt_rand(0, 600), serialize($row));
 
-		if ($chang) {
+		if ($chang && !$queue) {
 			$this->_redis->rpush($this->_queue, $id);
 		}
-
-		$row->_keep |= row::KEEP_CACHED;
 	}
 
 	/**
